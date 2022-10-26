@@ -40,7 +40,7 @@ def send_message(bot, message):
 
 def info(update, context):
     chat = update.effective_chat
-    context.bot.info(chat.id, get_new_image())
+    context.bot.info(chat.id, send_message())
 
 def nof_message(update, context):
     chat = update.effective_chat
