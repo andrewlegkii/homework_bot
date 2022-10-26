@@ -30,6 +30,7 @@ old_message = ''
 
 
 def send_message(bot, message):
+    """Функция отправки сообщения в чат телеграмма."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logger.info('Успешная отправка сообщения.')
@@ -38,6 +39,7 @@ def send_message(bot, message):
 
 
 def get_api_answer(current_timestamp):
+    """Функция запроса к API Яндекс.Практикум."""
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     try:
@@ -66,6 +68,7 @@ def get_api_answer(current_timestamp):
 
 
 def check_response(response):
+    """Функция проверки корректности ответа API Яндекс.Практикум."""
     if type(response) == dict:
         response['current_date']
         homeworks = response['homeworks']
@@ -78,6 +81,7 @@ def check_response(response):
 
 
 def parse_status(homework):
+    """Функция, проверяющая статус домашнего задания."""
     homework_name = homework.get('homework_name')
     homework_status = homework.get('status')
 
@@ -93,6 +97,7 @@ def parse_status(homework):
 
 
 def check_tokens():
+    """Функция проверки наличия токена и чат id телеграмма."""
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         logger.critical('Ошибка импорта токенов Telegram.')
         return False
@@ -103,6 +108,7 @@ def check_tokens():
 
 
 def main():
+    """Основная логика работы бота."""
     global old_message
     if not check_tokens():
         raise SystemExit('Я вышел')
