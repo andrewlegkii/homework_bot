@@ -64,7 +64,7 @@ def get_api_answer(current_timestamp):
             raise SystemError(f'Ошибка код {homework_statuses.status_code}')
         else:
             raise SystemError(
-                f'Недоступна конечная точка, код {homework_statuses.status_code}')
+                f'Ошибка, код {homework_statuses.status_code}')
 
 
 def check_response(response):
