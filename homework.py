@@ -37,6 +37,23 @@ def send_message(bot, message):
     except Exception as error:
         raise SystemError(f'Не отправляются сообщения, {error}')
 
+def info(update, context):
+    chat = update.effective_chat
+    context.bot.info(chat.id, get_new_image())
+
+def nof_message(update, context):
+    chat = update.effective_chat
+    name = update.message.chat.first_name
+    button = ReplyKeyboardMarkup([['/status']], resize_keyboard=True)
+
+    context.bot.send_message(
+        chat_id=chat.id,
+        text='Привет, {}. усточняю информацию'.format(name),
+        reply_markup=button
+    )
+
+    context.bot.send_message(chat.id, parse_status())
+
 
 def get_api_answer(current_timestamp):
     """Функция запроса к API Яндекс.Практикум."""
