@@ -2,6 +2,8 @@ import logging
 import os
 import time
 from http import HTTPStatus
+from telegram import ReplyKeyboardMarkup
+from telegram.ext import CommandHandler, Updater
 
 import requests
 import telegram
@@ -94,7 +96,6 @@ def parse_status(homework):
 
 
 def check_tokens():
-    """Проверка доступности необходимых токенов."""
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         logger.critical('Ошибка импорта токенов Telegram.')
         return False
