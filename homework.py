@@ -1,9 +1,6 @@
 import logging
-import os
 import time
 from http import HTTPStatus
-from telegram import ReplyKeyboardMarkup
-from telegram.ext import CommandHandler, Updater
 
 import requests
 import telegram
