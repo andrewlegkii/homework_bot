@@ -2,13 +2,13 @@ import logging
 import time
 from http import HTTPStatus
 import os
-import sys
+import telebot
 
 import requests
 import telegram
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv() 
 
 
 PRACTICUM_TOKEN = os.getenv('YP_TOKEN')
@@ -21,7 +21,7 @@ ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
 HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
 
 class MException(Exception):
-    """Кастомное исключение для бота."""
+    """Исключение для бота."""
 
     pass
 
@@ -30,6 +30,16 @@ HOMEWORK_STATUSES = {
     'reviewing': 'Работа взята на проверку ревьюером.',
     'rejected': 'Работа проверена: у ревьюера есть замечания.'
 }
+
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
+current_timestamp = int(time.time())  
+
+@bot.message_handler(commands=['hw'])
+def start_command(message):
+    new_homework = get_homework_statuses(current_timestamp)
+    if new_homework.get('homeworks'):
+        bot.send_message(message.chat.id, message)       #text=message
+    current_timestamp = new_homework.get('current_date', current_timestamp)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -123,7 +133,7 @@ def main():
             time.sleep(RETRY_TIME)
 
         except KeyboardInterrupt:
-            stop = input('Прервать работу бота? (Y/y)')
+            stop = input('Остановить бота? (Y/y)')
             if stop == 'Y':
                 break
             elif stop != 'Y':
@@ -132,7 +142,6 @@ def main():
                 break
             elif stop != 'y':
                 print('продолжение работы')
-
 
 
         except Exception as error:
