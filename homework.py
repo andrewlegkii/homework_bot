@@ -37,10 +37,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-handler = logging.StreamHandler(sys.stdout)
+formatter = logging.Formatter(
+    '%(asctime)s, %(levelname)s, %(message)s')
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
 logger.addHandler(handler)
-
-logging.debug('Бот успешно запущен.')
 
 
 def send_message(bot, message):
