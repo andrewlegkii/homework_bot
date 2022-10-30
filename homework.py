@@ -2,7 +2,6 @@ import logging
 import time
 from http import HTTPStatus
 import os
-import telebot
 
 import requests
 import telegram
@@ -53,16 +52,6 @@ def send_message(bot, message, bot_client):
     except Exception as error:
         raise SystemError(f'Не отправляются сообщения, {error}')
     return bot_client.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
-
-bot = telebot.TeleBot(TELEGRAM_TOKEN)
-current_timestamp = int(time.time())  
-
-@bot.message_handler(commands=['hw'])
-def start_command(message):
-    new_homework = get_api_answer(current_timestamp)
-    if new_homework.get('homeworks'):
-        bot.send_message(message.chat.id, message)
-    current_timestamp = new_homework.get('current_date', current_timestamp)
 
 
 def get_api_answer(current_timestamp):
