@@ -13,8 +13,6 @@ load_dotenv()
 PRACTICUM_TOKEN = os.getenv('YP_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TG_TOKEN')
-token=TELEGRAM_TOKEN
-BOT = telegram.Bot(token)
 
 RETRY_TIME = 600
 ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
@@ -110,6 +108,7 @@ def main():
     if not check_tokens():
         raise SystemExit('Я вышел')
 
+    BOT = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time()) - RETRY_TIME
 
     while True:
