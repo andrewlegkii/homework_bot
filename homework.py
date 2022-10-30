@@ -121,6 +121,18 @@ def main():
             current_timestamp = response['current_date']
             time.sleep(RETRY_TIME)
 
+        except KeyboardInterrupt:
+            stop = input('Прервать работу бота? (Y/y)')
+            if stop == 'Y':
+                break
+            elif stop != 'Y':
+                print('продолжение работы')
+            if stop == 'y':
+                break
+            elif stop != 'y':
+                print('продолжение работы')
+
+
 
         except Exception as error:
             logging.error(f'Сбой, проверьте код: {error}')
