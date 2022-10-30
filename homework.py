@@ -137,7 +137,6 @@ def main():
             else:
                 logger.debug('нет новых статусов')
 
-
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
             logger.error(message)
