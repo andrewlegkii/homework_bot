@@ -1,7 +1,6 @@
 import logging
 import time
 from http import HTTPStatus
-import logging
 
 import requests
 import telegram
@@ -29,10 +28,12 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 old_message = ''
 
+
 class APIAnswerError(Exception):
     """Кастомная ошибка при незапланированной работе API."""
 
     pass
+
 
 def send_message(bot, message):
     """Функция отправки сообщения в чат телеграмма."""
@@ -88,6 +89,7 @@ def check_response(response):
         raise TypeError('Содержимое не список')
     return homework
 
+
 def parse_status(homework):
     """Функция, проверяющая статус домашнего задания."""
     homework_name = homework.get('homework_name')
@@ -109,10 +111,10 @@ def check_tokens():
     if PRACTICUM_TOKEN is None:
         logging.error('PRACTICUM_TOKEN not found')
         return False
-    if TELEGRAM_CHAT_ID is None:
+    elif TELEGRAM_CHAT_ID is None:
         logging.error('TELEGRAM_CHAT_ID not found')
         return False
-    if TELEGRAM_TOKEN is None:
+    elif TELEGRAM_TOKEN is None:
         logging.error('TELEGRAM_TOKEN not found')
         return False
     return True
