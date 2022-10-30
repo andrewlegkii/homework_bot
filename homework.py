@@ -49,7 +49,6 @@ def send_message(bot, message, bot_client):
         logger.info('Успешная отправка сообщения.')
     except Exception as error:
         raise SystemError(f'Не отправляются сообщения, {error}')
-    return bot_client.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
 
 
 def get_api_answer(current_timestamp):
@@ -61,7 +60,7 @@ def get_api_answer(current_timestamp):
         logging.error(
             f'Сбой работы {homework_statuses.status_code}')
         send_message(
-            TELEGRAM_TOKEN, f'Сбой работы {homework_statuses.status_code}')
+            BOT, f'Сбой работы {homework_statuses.status_code}')
         raise MException(
             f'Сбой работы. Ответ сервера {homework_statuses.status_code}')
     status_json = homework_statuses.json()
@@ -73,7 +72,7 @@ def check_response(response):
     """Функция проверки корректности ответа API Яндекс.Практикум."""
     if not isinstance(response['homeworks'], list):
         logging.error('Запрос к серверу пришел с ошибкой')
-        send_message(TELEGRAM_TOKEN, 'Запрос к серверу пришел с ошибкой')
+        send_message(BOT, 'Запрос к серверу пришел с ошибкой')
         raise MException('Ошибка')
     return response['homeworks']
 
@@ -86,7 +85,7 @@ def parse_status(homework):
 
     if homework_status not in HOMEWORK_STATUSES:
         logging.error('Статус не обнаружен')
-        send_message(TELEGRAM_TOKEN, 'Статус не обнаружен')
+        send_message(BOT, 'Статус не обнаружен')
         raise MException('Статус не обнаружен')
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
@@ -107,7 +106,7 @@ def main():
     global old_message
     if not check_tokens():
         raise SystemExit('Я вышел')
-
+    global BOT
     BOT = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time()) - RETRY_TIME
 
