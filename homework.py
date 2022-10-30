@@ -14,7 +14,8 @@ load_dotenv()
 PRACTICUM_TOKEN = os.getenv('YP_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TG_TOKEN')
-BOT = telegram.Bot(token=TELEGRAM_TOKEN)
+token=TELEGRAM_TOKEN
+BOT = telegram.Bot(token)
 
 RETRY_TIME = 600
 ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
@@ -30,16 +31,6 @@ HOMEWORK_STATUSES = {
     'reviewing': 'Работа взята на проверку ревьюером.',
     'rejected': 'Работа проверена: у ревьюера есть замечания.'
 }
-
-bot = telebot.TeleBot(TELEGRAM_TOKEN)
-current_timestamp = int(time.time())  
-
-@bot.message_handler(commands=['hw'])
-def start_command(message):
-    new_homework = get_api_answer(current_timestamp)
-    if new_homework.get('homeworks'):
-        bot.send_message(message.chat.id, message)       #text=message
-    current_timestamp = new_homework.get('current_date', current_timestamp)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -62,6 +53,16 @@ def send_message(bot, message, bot_client):
     except Exception as error:
         raise SystemError(f'Не отправляются сообщения, {error}')
     return bot_client.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
+
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
+current_timestamp = int(time.time())  
+
+@bot.message_handler(commands=['hw'])
+def start_command(message):
+    new_homework = get_api_answer(current_timestamp)
+    if new_homework.get('homeworks'):
+        bot.send_message(message.chat.id, message)
+    current_timestamp = new_homework.get('current_date', current_timestamp)
 
 
 def get_api_answer(current_timestamp):
