@@ -137,12 +137,6 @@ def main():
             else:
                 logger.debug('нет новых статусов')
 
-        except KeyboardInterrupt:
-            stop = input('Прервать работу бота? (Y)')
-            if stop == 'Y':
-                break
-            elif stop != 'Y':
-                print('Бот работает дальше')
 
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
