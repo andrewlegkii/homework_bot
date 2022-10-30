@@ -108,16 +108,13 @@ def parse_status(homework):
 
 def check_tokens():
     """Функция проверки наличия токена и чат id телеграмма."""
-    if PRACTICUM_TOKEN is None:
-        logging.error('PRACTICUM_TOKEN not found')
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        logger.critical('Ошибка импорта токенов Telegramm.')
         return False
-    elif TELEGRAM_CHAT_ID is None:
-        logging.error('TELEGRAM_CHAT_ID not found')
-        return False
-    elif TELEGRAM_TOKEN is None:
-        logging.error('TELEGRAM_TOKEN not found')
-        return False
-    return True
+    elif not PRACTICUM_TOKEN:
+        raise SystemError('Ошибка импорта токенов Домашки.')
+    else:
+        return True
 
 
 def main():
