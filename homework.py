@@ -36,7 +36,7 @@ current_timestamp = int(time.time())
 
 @bot.message_handler(commands=['hw'])
 def start_command(message):
-    new_homework = get_homework_statuses(current_timestamp)
+    new_homework = get_api_answer(current_timestamp)
     if new_homework.get('homeworks'):
         bot.send_message(message.chat.id, message)       #text=message
     current_timestamp = new_homework.get('current_date', current_timestamp)
@@ -54,13 +54,14 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-def send_message(bot, message):
+def send_message(bot, message, bot_client):
     """Функция отправки сообщения в чат телеграмма."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logger.info('Успешная отправка сообщения.')
     except Exception as error:
         raise SystemError(f'Не отправляются сообщения, {error}')
+    return bot_client.send_message(chat_id=TELEGRAM_CHAT_ID, text=message)
 
 
 def get_api_answer(current_timestamp):
