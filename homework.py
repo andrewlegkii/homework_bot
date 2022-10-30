@@ -2,7 +2,6 @@ import logging
 import time
 from http import HTTPStatus
 import logging
-import telebot
 
 import requests
 import telegram
@@ -43,13 +42,6 @@ def send_message(bot, message):
     except Exception as error:
         raise SystemError(f'Не отправляются сообщения, {error}')
 
-bot = telebot.TeleBot('5646566299:AAHBZofSNIfnzEVtWw57XKvdKAjBt4u_n-g')
-@bot.message_handler(commands=['hw'])
-def start_command(message):
-    new_homework = get_api_answer(current_timestamp)
-    if new_homework.get('homeworks'):
-        bot.send_message(message.chat.id, message)
-    current_timestamp = new_homework.get('current_date', current_timestamp)
 
 def get_api_answer(current_timestamp):
     """Функция запроса к API Яндекс.Практикум."""
