@@ -139,7 +139,7 @@ def main():
                     send_message(bot, homework_status)
             else:
                 logger.debug('нет новых статусов')
-        
+
         except KeyboardInterrupt:
             stop = input('Прервать работу бота? (Y)')
             if stop == 'Y':
