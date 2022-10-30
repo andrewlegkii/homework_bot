@@ -42,7 +42,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-def send_message(bot, message, bot_client):
+def send_message(bot, message):
     """Функция отправки сообщения в чат телеграмма."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
