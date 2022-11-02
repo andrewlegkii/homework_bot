@@ -121,6 +121,7 @@ def main():
         try:
             response = get_api_answer(current_timestamp)
             response = check_response(response)
+
             if len(response) > 0:
                 homework_status = parse_status(response[0])
                 if homework_status is not None:
@@ -129,10 +130,11 @@ def main():
                 logger.debug('нет новых статусов')
 
         except Exception as error:
-            send_message = f'Сбой в работе программы: {error}'
-            logger.error(send_message)
-            if send_message != old_message:
-                old_message = send_message
+            message = f'Сбой в работе программы: {error}'
+            logger.error(message)
+            if message != old_message:
+                send_message(bot, message)
+                old_message = message
         finally:
             current_timestamp = int(time.time())
             time.sleep(RETRY_TIME)
