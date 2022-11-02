@@ -2,7 +2,7 @@ import logging
 import time
 from http import HTTPStatus
 import os
-
+import requests as r
 import requests
 import telegram
 from dotenv import load_dotenv
@@ -53,15 +53,18 @@ def get_api_answer(current_timestamp):
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     try:
-        homework_statuses = requests.get(ENDPOINT,
-                                         headers=HEADERS,
-                                         params=params)
-    except Exception as error:
-        raise SystemError(f'Ошибка получения запроса, {error}')
-    if homework_statuses.status_code != HTTPStatus.OK:
-        logger.info('успешное получение конечной точки')
-        homework = homework_statuses.json()
-        return homework
+        response = r.get(ENDPOINT, headers=HEADERS, params=params)
+    except r.exceptions.RequestException:
+        msg = 'Cannot reach the Endpoint.'
+        raise APIAnswerError(msg)
+
+    if response.status_code != HTTPStatus.OK:
+        msg = (f'Endpoint {ENDPOINT} is not availiable, '
+               f'http status: {response.status_code}'
+               )
+        raise APIAnswerError(msg)
+
+    return response.json()
 
 
 def check_response(response):
