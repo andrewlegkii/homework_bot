@@ -66,8 +66,10 @@ def get_api_answer(current_timestamp):
 
 def check_response(response):
     """Функция проверки корректности ответа API Яндекс.Практикум."""
-    if not isinstance(response, dict): #ПРОБУЮ СДЕЛАТЬ, КАК ВЫ ПРЕДЛОГАЛИ,
-        logging.error('API передал не словарь') #НО НЕ ОЧЕНЬ  ПОЛУЧАЕТСЯ, ЕЩЕ ПРОБУЮ
+    if not isinstance(response, dict):
+        # ПРОБУЮ СДЕЛАТЬ, КАК ВЫ ПРЕДЛОГАЛИ,
+        # НО НЕ ОЧЕНЬ  ПОЛУЧАЕТСЯ, ЕЩЕ ПРОБУЮ
+        logging.error('API передал не словарь')
         raise TypeError('API передал не словарь')
     homework = response.get('homeworks')
     if homework is None:
@@ -127,7 +129,7 @@ def main():
                 logger.debug('нет новых статусов')
 
         except Exception as error:
-            message = f'Сбой в работе программы: {error}'
+            send_message = f'Сбой в работе программы: {error}'
             logger.error(send_message)
             if send_message != old_message:
                 old_message = send_message
