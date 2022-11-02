@@ -1,14 +1,18 @@
 import logging
 import time
 from http import HTTPStatus
+import os
 
 import requests
 import telegram
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-PRACTICUM_TOKEN = 'y0_AgAAAAAXiCsAAAYckQAAAADSK0Hl09fR7BlkQYmlndKB9V20yFj7Q3U'
-TELEGRAM_TOKEN = '5646566299:AAHBZofSNIfnzEVtWw57XKvdKAjBt4u_n-g'
-TELEGRAM_CHAT_ID = 360300829
+PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 RETRY_TIME = 600
 ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
@@ -54,31 +58,16 @@ def get_api_answer(current_timestamp):
                                          params=params)
     except Exception as error:
         raise SystemError(f'Ошибка получения запроса, {error}')
-    if homework_statuses.status_code == HTTPStatus.OK:
+    if homework_statuses.status_code != HTTPStatus.OK:
         logger.info('успешное получение конечной точки')
         homework = homework_statuses.json()
-        if 'error' in homework:
-            raise SystemError(f'Ошибка json, {homework["error"]}')
-        elif 'code' in homework:
-            raise SystemError(f'Ошибка json, {homework["code"]}')
-        else:
-            return homework
-    elif homework_statuses.status_code == HTTPStatus.REQUEST_TIMEOUT:
-        raise SystemError(f'Ошибка код {homework_statuses.status_code}')
-    elif homework_statuses.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
-        raise SystemError(f'Ошибка код {homework_statuses.status_code}')
-    else:
-        raise SystemError(
-            f'Ошибка, код {homework_statuses.status_code}')
+        return homework
 
 
 def check_response(response):
     """Функция проверки корректности ответа API Яндекс.Практикум."""
-    if isinstance(response, list):
-        response = response[0]
-        logging.info('API передал список')
-    if not isinstance(response, dict):
-        logging.error('API передал не словарь')
+    if not isinstance(response, dict): #ПРОБУЮ СДЕЛАТЬ, КАК ВЫ ПРЕДЛОГАЛИ,
+        logging.error('API передал не словарь') #НО НЕ ОЧЕНЬ  ПОЛУЧАЕТСЯ, ЕЩЕ ПРОБУЮ
         raise TypeError('API передал не словарь')
     homework = response.get('homeworks')
     if homework is None:
@@ -139,10 +128,9 @@ def main():
 
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
-            logger.error(message)
-            if message != old_message:
-                bot.send_message(TELEGRAM_CHAT_ID, message)
-                old_message = message
+            logger.error(send_message)
+            if send_message != old_message:
+                old_message = send_message
         finally:
             current_timestamp = int(time.time())
             time.sleep(RETRY_TIME)
